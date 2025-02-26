@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMES Game ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            text-align: center;
+            padding: 20px;
+            color: #fff;
+            overflow: hidden;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        button {
+            background: #ff758c;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #ff527b;
+        }
+        #result {
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .quote {
+            font-style: italic;
+            margin-top: 15px;
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .heart {
+            position: absolute;
+            color: red;
+            font-size: 24px;
+            opacity: 0.8;
+            animation: floatUp 3s linear infinite;
+        }
+        @keyframes floatUp {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(-100px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>FLAMES Game ❤️</h1>
+        <input type="text" id="name1" placeholder="Enter first name">
+        <input type="text" id="name2" placeholder="Enter second name">
+        <button onclick="playFlames()">Find Relationship</button>
+        <p id="result"></p>
+        <p class="quote" id="quote"></p>
+    </div>
+
+    <script>
+        const quotes = {
+            "Friends": [
+                "A friend is someone who knows all about you and still loves you.",
+                "Friendship is the purest form of love.",
+                "True friends are never apart, maybe in distance but never in heart."
+            ],
+            "Love": [
+                "Love is not about how many days, months, or years you’ve been together. It’s about how much you love each other every single day.",
+                "The best thing to hold onto in life is each other. ❤️",
+                "You are my today and all of my tomorrows. 💕"
+            ],
+            "Affection": [
+                "Affection is the language of the heart, the warmth in every hug and the kindness in every touch.",
+                "Small acts of kindness and affection can create lasting happiness.",
+                "Affection is not measured by words but by actions."
+            ],
+            "Marriage": [
+                "Marriage is not just about love, but about trust, respect, and lifelong companionship.",
+                "A successful marriage requires falling in love many times, always with the same person.",
+                "Marriage is a journey of two hearts beating as one."
+            ],
+            "Enemy": [
+                "Sometimes, people come into our lives to teach us lessons, not to stay forever.",
+                "An enemy is just a friend who misunderstood you.",
+                "Holding onto anger is like drinking poison and expecting the other person to suffer."
+            ],
+            "Siblings": [
+                "Siblings: your first friend and sometimes your biggest rival.",
+                "Brothers and sisters may fight, but they always have each other's backs.",
+                "A sibling is a little bit of childhood that can never be lost."
+            ]
+        };
+
+        function getRandomQuote(category) {
+            let categoryQuotes = quotes[category] || ["Relationships are unique, just like you!"];
+            return categoryQuotes[Math.floor(Math.random() * categoryQuotes.length)];
+        }
+
+        function removeCommonLetters(str1, str2) {
+            let name1 = str1.toLowerCase().replace(/\s/g, "").split("");
+            let name2 = str2.toLowerCase().replace(/\s/g, "").split("");
+
+            name1.forEach(letter => {
+                let index = name2.indexOf(letter);
+                if (index !== -1) {
+                    name2.splice(index, 1);
+                } else {
+                    name2.push(letter);
+                }
+            });
+
+            return name2.length;
+        }
+
+        function flamesResult(count) {
+            let flames = ["Friends", "Love", "Affection", "Marriage", "Enemy", "Siblings"];
+            while (flames.length > 1) {
+                let index = (count % flames.length) - 1;
+                if (index >= 0) {
+                    flames = flames.slice(index + 1).concat(flames.slice(0, index));
+                } else {
+                    flames.pop();
+                }
+            }
+            return flames[0];
+        }
+
+        function createFloatingHearts() {
+            for (let i = 0; i < 10; i++) {
+                let heart = document.createElement("div");
+                heart.classList.add("heart");
+                heart.innerHTML = "❤️";
+                heart.style.left = `${Math.random() * 100}%`;
+                heart.style.animationDuration = `${2 + Math.random() * 2}s`;
+                heart.style.fontSize = `${20 + Math.random() * 20}px`;
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 3000);
+            }
+        }
+
+        function playFlames() {
+            let name1 = document.getElementById("name1").value.trim();
+            let name2 = document.getElementById("name2").value.trim();
+            if (!name1 || !name2) {
+                alert("Please enter both names!");
+                return;
+            }
+
+            let count = removeCommonLetters(name1, name2);
+            let result = flamesResult(count);
+            
+            document.getElementById("result").style.display = "block";
+            document.getElementById("result").innerHTML = `❤️ Relationship: <strong>${result}</strong>`;
+
+            document.getElementById("quote").style.opacity = "1";
+            document.getElementById("quote").innerText = getRandomQuote(result);
+
+            if (result === "Love") {
+                createFloatingHearts();
+            }
+        }
+    </script>
+
+</body>
+</html>
